@@ -23,13 +23,10 @@ def populate():
     try:
         client = weaviate.connect_to_local(host="weaviate", port=8080)
 
-        resp = create_formula1_collection # create_movies_collection(client)
-
-        return f"connected to Weaviate! {client.is_live()}, {resp}"     
-
-        # import_formula1_data # import_movies_data(client)
-        # collection_length = get_collection_length(client)
-        # return jsonify({'message': 'Populated Weaviate!', 'collection_length': collection_length})
+        create_formula1_collection(client) 
+        import_formula1_data(client) 
+        collection_length = get_collection_length(client)
+        return jsonify({'message': 'Populated Weaviate!', 'collection_length': collection_length})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
@@ -44,6 +41,18 @@ def check_db() -> str:
         return jsonify({'error': str(e)}), 500
     
 
+@app.route('/query')
+def query():
+    data = request.get_json()
+    if 'query' in data:
+        query = data['query']
+
+    print(f"Query: {query}")
+    try:
+        relevant_docs = retriever.get_relevant_docs(query)
+        return jsonify({'relevant_docs': relevant_docs})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 

@@ -22,24 +22,21 @@ def create_formula1_collection(client):
     # TODO
     client.collections.create(
         name="formula1",
-        # properties=[
-        #     wc.Property(name="circuitRef", data_type=wc.DataType.TEXT),
-        #     wc.Property(name="name", data_type=wc.DataType.TEXT),
-        #     wc.Property(name="location", data_type=wc.DataType.TEXT),
-        #     wc.Property(name="country", data_type=wc.DataType.TEXT),
-        #     wc.Property(name="lat", data_type=wc.DataType.NUMBER), # JUISTE DATATYPE ???
-        #     wc.Property(name="lng", data_type=wc.DataType.NUMBER), # JUISTE DATATYPE ???
-        #     wc.Property(name="alt", data_type=wc.DataType.NUMBER),
-        #     wc.Property(name="url", data_type=wc.DataType.TEXT),
-        # ],
+        properties=[
+            wc.Property(name="circuitId", data_type=wc.DataType.NUMBER),
+            wc.Property(name="circuitRef", data_type=wc.DataType.TEXT),
+            wc.Property(name="name", data_type=wc.DataType.TEXT),
+            wc.Property(name="location", data_type=wc.DataType.TEXT),
+            wc.Property(name="country", data_type=wc.DataType.TEXT),
+            # wc.Property(name="lat", data_type=wc.DataType.NUMBER), # JUISTE DATATYPE ???
+            # wc.Property(name="lng", data_type=wc.DataType.NUMBER), # JUISTE DATATYPE ???
+            # wc.Property(name="alt", data_type=wc.DataType.NUMBER),
+            wc.Property(name="url", data_type=wc.DataType.TEXT),
+        ],
         vectorizer_config=wc.Configure.Vectorizer.none(),
     )
 
-    resp = client.collections.exists("formula1")
-
-    # check if collection was created
-    return resp
-
+    print("Created the 'Formula-1' schema")
 
 
 def import_formula1_data(client):
@@ -51,22 +48,27 @@ def import_formula1_data(client):
         # TODO make my own embeddings
         embs_url = "/app/build_knowledge_base/datasets/embeddings/circuits.csv"
         emb_df = pd.read_csv(embs_url)
+    
 
         formula1_data = client.collections.get("formula1")
+
 
         with formula1_data.batch.dynamic() as batch:
             for i, circuit in tqdm(enumerate(df.itertuples(index=False)), desc="Importing data to Weaviate"):
                 # release_date = datetime.datetime.strptime(circuit.release_date, "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)
+                print("circuit: ", circuit)
+                print("")
                 # genre_ids = json.loads(circuit.genre_ids)
 
                 obj = {
+                    "circuitId": circuit.circuitId,
                     "circuitRef": circuit.circuitRef,
                     "name": circuit.name,
                     "location": circuit.location,
                     "country": circuit.country,
-                    "lat": circuit.lat,
-                    "lng": circuit.lng,
-                    "alt": circuit.alt,
+                    # "lat": circuit.lat,
+                    # "lng": circuit.lng,
+                    # "alt": circuit.alt,
                     "url": circuit.url,
                 }
 
@@ -76,7 +78,7 @@ def import_formula1_data(client):
                 # add object, vector to batch queue
                 batch.add_object(
                     properties=obj,
-                    uuid=generate_uuid5(circuit.id),
+                    uuid=generate_uuid5(circuit.circuitId),
                     vector=vector
                 )
 
