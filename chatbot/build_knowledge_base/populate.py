@@ -12,59 +12,62 @@ load_dotenv()
 
 
 
-def create_movies_collection(client):
+def create_formula1_collection(client):
     # check if the schema already exists
-    if client.collections.exists("Movies"):
-        client.collections.delete("Movies")
-        print("Deleted the existing 'Movies' schema")
+    if client.collections.exists("formula1"):
+        client.collections.delete("formula1")
+        print("Deleted the existing 'Formula-1' schema")
 
-    # Create collection 'Movies'
+    # Create collection 'formula1'
+    # TODO
     client.collections.create(
-        name="Movies",
-        properties=[
-            wc.Property(name="title", data_type=wc.DataType.TEXT),
-            wc.Property(name="backdrop_path", data_type=wc.DataType.TEXT),
-            wc.Property(name="poster_path", data_type=wc.DataType.TEXT),
-            wc.Property(name="overview", data_type=wc.DataType.TEXT),
-            wc.Property(name="vote_average", data_type=wc.DataType.NUMBER),
-            wc.Property(name="genre_ids", data_type=wc.DataType.INT_ARRAY),
-            wc.Property(name="release_date", data_type=wc.DataType.DATE),
-            wc.Property(name="popularity", data_type=wc.DataType.NUMBER),
-            wc.Property(name="tmdb_id", data_type=wc.DataType.INT),
-            wc.Property(name="original_language", data_type=wc.DataType.TEXT),
-        ],
+        name="formula1",
+        # properties=[
+        #     wc.Property(name="circuitRef", data_type=wc.DataType.TEXT),
+        #     wc.Property(name="name", data_type=wc.DataType.TEXT),
+        #     wc.Property(name="location", data_type=wc.DataType.TEXT),
+        #     wc.Property(name="country", data_type=wc.DataType.TEXT),
+        #     wc.Property(name="lat", data_type=wc.DataType.NUMBER), # JUISTE DATATYPE ???
+        #     wc.Property(name="lng", data_type=wc.DataType.NUMBER), # JUISTE DATATYPE ???
+        #     wc.Property(name="alt", data_type=wc.DataType.NUMBER),
+        #     wc.Property(name="url", data_type=wc.DataType.TEXT),
+        # ],
         vectorizer_config=wc.Configure.Vectorizer.none(),
     )
 
+    resp = client.collections.exists("formula1")
+
+    # check if collection was created
+    return resp
 
 
-def import_movies_data(client):
-    """" Import movies data to Weaviate """    
+
+def import_formula1_data(client):
+    """" Import formula1 data to Weaviate """    
     
-    if os.path.exists("/app/build_knowledge_base/datasets/movies_data_1990_2024.csv"):
-        df = pd.read_csv("/app/build_knowledge_base/datasets/movies_data_1990_2024.csv")
+    if os.path.exists("/app/build_knowledge_base/datasets/circuits.csv"):
+        df = pd.read_csv("/app/build_knowledge_base/datasets/circuits.csv")
 
-        embs_url = "/app/build_knowledge_base/datasets/movies_data_1990_2024_embeddings.csv"
+        # TODO make my own embeddings
+        embs_url = "/app/build_knowledge_base/datasets/embeddings/circuits.csv"
         emb_df = pd.read_csv(embs_url)
 
-        movies = client.collections.get("Movies")
+        formula1_data = client.collections.get("formula1")
 
-        with movies.batch.dynamic() as batch:
-            for i, movie in tqdm(enumerate(df.itertuples(index=False)), desc="Importing Movies"):
-                release_date = datetime.datetime.strptime(movie.release_date, "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)
-                genre_ids = json.loads(movie.genre_ids)
+        with formula1_data.batch.dynamic() as batch:
+            for i, circuit in tqdm(enumerate(df.itertuples(index=False)), desc="Importing data to Weaviate"):
+                # release_date = datetime.datetime.strptime(circuit.release_date, "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)
+                # genre_ids = json.loads(circuit.genre_ids)
 
-                movie_obj = {
-                    "title": movie.title,
-                    "backdrop_path": movie.backdrop_path,
-                    "poster_path": movie.poster_path,
-                    "overview": movie.overview,
-                    "vote_average": movie.vote_average,
-                    "genre_ids": genre_ids,
-                    "release_date": release_date,
-                    "popularity": movie.popularity,
-                    "tmdb_id": movie.id,
-                    "original_language": movie.original_language,
+                obj = {
+                    "circuitRef": circuit.circuitRef,
+                    "name": circuit.name,
+                    "location": circuit.location,
+                    "country": circuit.country,
+                    "lat": circuit.lat,
+                    "lng": circuit.lng,
+                    "alt": circuit.alt,
+                    "url": circuit.url,
                 }
 
                 # Get the vector
@@ -72,22 +75,22 @@ def import_movies_data(client):
 
                 # add object, vector to batch queue
                 batch.add_object(
-                    properties=movie_obj,
-                    uuid=generate_uuid5(movie.id),
+                    properties=obj,
+                    uuid=generate_uuid5(circuit.id),
                     vector=vector
                 )
 
         # Check if any objects failed to import
-        if len(client.collections.get("Movies").batch.failed_objects) > 0:
-            print(f"Failed to import {len(client.collections.get('Movies').batch.failed_objects)} objects")
+        if len(client.collections.get("formula1").batch.failed_objects) > 0:
+            print(f"Failed to import {len(client.collections.get('formula1').batch.failed_objects)} objects")
     else:
-        print("File not found: ./datasets/movies_data_1990_2024.csv")
+        print("File not found: ./datasets/circuits.csv")
 
 
 
 def get_collection_length(client):
     try:
-        movies = client.collections.get("Movies")
-        return len(list(movies.iterator()))
+        formula1_data = client.collections.get("formula1")
+        return len(list(formula1_data.iterator()))
     except Exception as e:
         raise Exception(f"Could not get collection length: {str(e)}")

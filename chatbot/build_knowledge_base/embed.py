@@ -22,7 +22,7 @@ def query(texts):
     return response.json()
 
 
-df = pd.read_csv("./datasets/movies_data_1990_2024.csv")
+df = pd.read_csv("./datasets/circuits.csv")
 
 # Loop through the dataset to generate vectors in batches
 emb_dfs = list()
@@ -30,7 +30,7 @@ src_texts = list()
 for i, row in enumerate(df.itertuples(index=False)):
     # association between these embeddings and other properties of the movies is maintained through the indexing of the resulting DataFrame. 
     # so only the title and overview will be used for semantic similarity
-    src_text = "Title" + row.title + "; Overview: " + row.overview 
+    src_text = f"Circuit reference: {row.circuitRef} Name: {row.name} Location: {row.location} Country: {row.country}, Altitude: {row.alt} Lat: {row.lat} Lng: {row.lng} URL: {row.url}"
     # Add to the buffer
     src_texts.append(src_text)
     if (len(src_texts) == 50) or (i + 1 == len(df)):  # Get embeddings in batches of 50
@@ -45,6 +45,6 @@ for i, row in enumerate(df.itertuples(index=False)):
 
 emb_df = pd.concat(emb_dfs)
 emb_df.to_csv(
-    f"./datasets/movies_data_1990_2024_embeddingsMY0WN.csv",
+    f"./datasets/embeddings/circuits.csv",
     index=False,
 )
