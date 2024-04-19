@@ -1,1 +1,6 @@
 Flask
+weaviate-client
+pandas
+tqdm
+python-dotenv
+flask-cors
