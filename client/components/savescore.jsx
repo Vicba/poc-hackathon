@@ -26,16 +26,26 @@ export function SaveScore() {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = ({ score }) => console.log(parseFloat(score));
+    const onSubmit = ({ score, lessonId }) => {
+        console.log({ score, lessonId });
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Label htmlFor="score">Score</Label>
-            {/* include validation with required or other standard HTML validation rules */}
-            <Input {...register("score", { required: true })} />
-            {/* errors will return when field validation fails  */}
-            {errors.score && <span>This field is required</span>}
-
+            <div>
+                <Label htmlFor="lessonId">Lesson ID</Label>
+                {/* include validation with required or other standard HTML validation rules */}
+                <Input {...register("lessonId", { required: true })} />
+                {/* errors will return when field validation fails  */}
+                {errors.lessonId && <span>This field is required</span>}
+            </div>
+            <div className="mt-4">
+                <Label htmlFor="score">Score</Label>
+                {/* include validation with required or other standard HTML validation rules */}
+                <Input {...register("score", { required: true })} />
+                {/* errors will return when field validation fails  */}
+                {errors.score && <span>This field is required</span>}
+            </div>
             <Button type="submit" className="mt-6">
                 Save Score
             </Button>
