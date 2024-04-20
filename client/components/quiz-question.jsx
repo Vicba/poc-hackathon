@@ -3,24 +3,54 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { fabric } from "fabric";
+import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
 export function QuizQuestion() {
-    const [canvas, setCanvas] = useState(null);
-    const canvasRef = useRef(null);
+    const { editor, onReady } = useFabricJSEditor();
+
+    const canvasWrapper = useRef(null);
 
     useEffect(() => {
-        setCanvas(new fabric.Canvas(canvasRef.current, {
-            isDrawingMode: true,
-            width: 800,
-            height: 600,
-            renderOnAddRemove: true,
-        }));
-    }, []);
+        if (!editor || !fabric || !canvasWrapper) return;
+
+        editor.canvas.setWidth(400);
+        editor.canvas.setHeight(400);
+        editor.canvas.isDrawingMode = true;
+        editor.canvas.renderOnAddRemove = true;
+        editor.canvas.freeDrawingBrush.width = 2;
+        editor.canvas.renderAll();
+    }, [editor?.canvas]);
+
+    // on resize
+    useEffect(() => {
+        const resizeHandler = () => {
+            if (!editor || !canvasWrapper) return;
+
+            editor.canvas.setWidth(canvasWrapper.current.offsetWidth);
+            editor.canvas.setHeight(canvasWrapper.current.offsetHeight);
+            editor.canvas.renderAll();
+        };
+
+        window.addEventListener("resize", resizeHandler);
+
+        return () => {
+            window.removeEventListener("resize", resizeHandler);
+        };
+    }, [editor?.canvas]);
 
     const handleSubmit = () => {
-        canvas.isDrawingMode = false; // Disable drawing mode before getting the data
-        const data = canvas.toDataURL();
-        console.log(data);
+        editor.canvas.isDrawingMode = false; // Disable drawing mode before getting the data
+        // set the background color to white
+        editor.canvas.backgroundColor = "#fff";
+        const data = editor.canvas.toDataURL();
+        editor.canvas.backgroundColor = "transparent"; // reset the background color
+        // remove the prefix
+        const base64Data = data.replace(/^data:image\/png;base64,/, "");
+        console.log(base64Data);
+    };
+
+    const onReset = () => {
+        editor.canvas.clear();
     };
 
     return (
@@ -40,12 +70,26 @@ export function QuizQuestion() {
                 <h2 className="text-3xl font-bold">
                     Draw the Circuit of The Americas
                 </h2>
-                <div className="w-full max-w-3xl aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                    <canvas ref={canvasRef} />
+                <div
+                    ref={canvasWrapper}
+                    className="w-[400px] h-[400px] bg-gray-200 rounded-lg overflow-hidden relative"
+                >
+                    <FabricJSCanvas
+                        className="sample-canvas"
+                        onReady={onReady}
+                    />
+                    <Button
+                        className="absolute top-4 right-4 z-10"
+                        variant="secondary"
+                        size="sm"
+                        onClick={onReset}
+                    >
+                        Reset
+                    </Button>
                 </div>
                 <Button
                     className="bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors"
-                    onClick={() => handleSubmit()}
+                    onClick={handleSubmit}
                 >
                     Submit and Next
                 </Button>
