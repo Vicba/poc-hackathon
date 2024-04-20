@@ -1,8 +1,10 @@
 # Sportify - Blockchain x AI Hackathon POC
 
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-<img src="./readme-assets/image.png" alt="Sportify" width="200" style="border-radius: 3rem;"/>
-<div>
+<p align="center">
+  <br/>
+    <img src="./readme-assets/image.png" alt="Sportify" width="200" style="border-radius: 3rem;"/>
+  <br/>
+</p>
 
 ## Introduction
 
