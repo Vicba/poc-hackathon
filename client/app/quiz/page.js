@@ -40,6 +40,8 @@ export default function Quiz() {
             incrementTotalTime(45 - seconds);
             await quizQuestionRef.current.handleCheck();
 
+            console.log("currentQuestion", currentQuestion, questions.length - 1)
+
             if (currentQuestion === questions.length - 1) {
                 router.push("/quiz/result");
                 resetCurrentQuestion();

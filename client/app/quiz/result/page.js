@@ -23,9 +23,9 @@ export default function Result() {
 
     const handleSave = async () => {
         try {
-            const method = contract.methods.uploadScoreOfLesson(quizId, score);
+            const method = contract.methods.uploadScoreOfQuiz(quizId, score);
             const txHash = await sendTransaction(method, contract, address);
-            const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfLesson(address, quizId).call();
+            const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfQuiz(address, quizId).call();
             console.log(parseInt(scoreFromBlockchain))
             router.push("/");
             toast({
