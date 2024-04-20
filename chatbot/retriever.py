@@ -8,11 +8,16 @@ import weaviate.classes.config as wc
 import pandas as pd
 from typing import List, Union
 from weaviate.classes.query import MetadataQuery
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from dotenv import load_dotenv
-
 load_dotenv()
 
 hf_token = os.getenv("HUGGINGFACE_APIKEY")
+
+from prompts import (
+    INSTRUCTION_PROMPT
+)
 
 
 
@@ -38,6 +43,40 @@ class Retriever():
             json={"inputs": text, "options": {"wait_for_model": True}},
         )
         return response.json()
+    
+
+    def generate_answer(self, query: str, contexts: list[str]):
+        print("huggingface access token: ", hf_token)
+
+        device = "cuda" # the device to load the model onto
+
+        model_name = "mistralai/Mistral-7B-Instruct-v0.2"
+        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+
+        documents = ""
+        for idx, context in enumerate(contexts):
+            documents += f"\n\n Document {idx}: {context}\n"
+
+        messages = [
+            {"role": "user", "content": INSTRUCTION_PROMPT},
+            {"role": "assistant", "content": "Well, I'm quite partial to a good squeeze of fresh lemon juice. It adds just the right amount of zesty flavour to whatever I'm cooking up in the kitchen!"},
+            {"role": "user", "content": f"Query: {query}, Documents: {documents}"},
+        ]
+
+
+        encodeds = tokenizer.apply_chat_template(conversation=messages, return_tensors="pt")
+        model_inputs = encodeds.to(device)
+        model.to(device)
+
+        generated_ids = model.generate(model_inputs, max_new_tokens=1000, do_sample=True)
+        decoded = tokenizer.batch_decode(generated_ids)
+        
+
+        print(f"Contexts: {contexts}")
+
+        return decoded[0]
+
             
 
     def get_relevant_docs(self, query: str):
@@ -58,7 +97,8 @@ class Retriever():
                 return_metadata=MetadataQuery(distance=True),
             )
 
-            return [{"id": o.uuid, "properties": o.properties} for o in response.objects]
+
+            return [{"properties": o.properties} for o in response.objects] # [{"id": o.uuid, "properties": o.properties} for o in response.objects]
         except Exception as e:
             raise Exception(f"Could not get relevant documents: {str(e)}")
 

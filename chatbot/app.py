@@ -50,7 +50,9 @@ def query():
     print(f"Query: {query}")
     try:
         relevant_docs = retriever.get_relevant_docs(query)
-        return jsonify({'relevant_docs': relevant_docs})
+        answer  = retriever.generate_answer(query, relevant_docs)
+
+        return jsonify({'relevant_docs': relevant_docs, 'answer': answer})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
