@@ -75,7 +75,7 @@ export default function Home() {
                 </Link>
             </div>
             <Mintnft/>
-            <Overview/>
+            {/* <Overview/> */}
         </main>
     );
 }
