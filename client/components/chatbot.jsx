@@ -21,6 +21,7 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from 'react'; // Import useState hook
+import Link from "next/link";
 
 
 export function Chatbot() {
@@ -40,7 +41,7 @@ export function Chatbot() {
         },
         body: JSON.stringify({ "query": inputValue }),
       });
-      
+
       if (response.ok) {
         console.log('Message sent successfully');
         json = await response.json();
@@ -55,13 +56,17 @@ export function Chatbot() {
       console.log(messages)
     }
   };
-  
+
   return (
     (<div className="flex flex-col h-screen">
       <header
         className="bg-gray-900 text-white py-4 px-6 flex items-center justify-between">
         <div className="flex items-center">
-          <button className="p-2 bg-slate-600 rounded mr-4">Go Back</button>
+          <button className="p-2 bg-slate-600 rounded mr-4">
+            <Link href="/">
+                Go Back
+            </Link>
+        </button>
           <h1 className="text-lg font-medium">SportIQ Chat</h1>
         </div>
         <div className="flex items-center">
@@ -94,7 +99,7 @@ export function Chatbot() {
         <Input
           className="flex-1 bg-gray-800 border-none rounded-lg py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Type your message..."
-          type="text" 
+          type="text"
           value={inputValue} // Bind input value to state
           onChange={handleInputChange} // Handle input change
           />
