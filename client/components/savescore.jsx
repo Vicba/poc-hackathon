@@ -6,6 +6,8 @@ import { z } from "zod";
 import dah from "../lib/abi.json";
 import { AbiItem } from "web3-utils";
 import Web3 from 'web3';
+import { sendTransaction } from "@/web3/ethereum";
+import useStore from "@/hooks/useStore";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -26,16 +28,19 @@ export function SaveScore() {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm();
-    const web3 = new Web3(Web3.givenProvider);
+    } = useForm({defaultValues: {lessonId:1, score:80}});
+
+    const { address } = useStore();
+    const web3 = new Web3(window.ethereum);
     const contract = new web3.eth.Contract(
         dah,
-        "0xDA07165D4f7c84EEEfa7a4Ff439e039B7925d3dF"
+        "0x8a2270531063d97555047acb2f79b86cc0173824"
     );
-    console.log("yeees")
-    const onSubmit = async ({ score, lessonId }) => {
-        console.log({ score, lessonId });
-        await contract.methods.uploadScoreOfLesson(lessonId, score).call();
+    const onSubmit = async ({ lessonId, score }) => {
+        console.log({ lessonId, score });
+        const method = contract.methods.uploadScoreOfLesson(Number(lessonId), Number(score));
+        const txHash = await sendTransaction(method, contract, address);
+        // console.log(txHash)
     }
 
     return (
