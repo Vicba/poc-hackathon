@@ -38,8 +38,10 @@ export function SaveScore() {
     );
     const onSubmit = async ({ lessonId, score }) => {
         console.log({ lessonId, score });
-        const method = contract.methods.uploadScoreOfLesson(Number(lessonId), Number(score));
+        const method = contract.methods.uploadScoreOfLesson(lessonId, score);
         const txHash = await sendTransaction(method, contract, address);
+        const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfLesson(address, lessonId).call();
+        console.log(parseInt(scoreFromBlockchain))
         // console.log(txHash)
     }
 
