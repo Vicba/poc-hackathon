@@ -34,13 +34,13 @@ export function SaveScore() {
     const web3 = new Web3(window.ethereum);
     const contract = new web3.eth.Contract(
         dah,
-        "0x8a2270531063d97555047acb2f79b86cc0173824"
+        "0xe8e9e68a61570ff81296543509722e2c5514025c"
     );
     const onSubmit = async ({ lessonId, score }) => {
         console.log({ lessonId, score });
-        const method = contract.methods.uploadScoreOfLesson(lessonId, score);
+        const method = contract.methods.uploadScoreOfQuiz(lessonId, score);
         const txHash = await sendTransaction(method, contract, address);
-        const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfLesson(address, lessonId).call();
+        const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfQuiz(address, lessonId).call();
         console.log(parseInt(scoreFromBlockchain))
         // console.log(txHash)
     }

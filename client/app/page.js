@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Mintnft } from "@/components/mintnft";
 import useStore from "@/hooks/useStore";
 import Link from "next/link";
-import { set } from "react-hook-form";
 import Web3 from 'web3';
 
 export default function Home() {
@@ -47,6 +47,7 @@ export default function Home() {
                     Test score
                 </Link>
             </div>
+            <Mintnft/>
         </main>
     );
 }
