@@ -160,8 +160,9 @@ class Retriever():
             response = formula1_data.query.near_vector(
                 near_vector=query_vector,
                 # query_properties=["name", "location", "country"],
-                limit=3,
-                return_metadata=MetadataQuery(distance=True),
+                # query=query,
+                limit=1,
+                # return_metadata=MetadataQuery(distance=True),
             )
 
 

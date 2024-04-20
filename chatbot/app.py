@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from retriever import Retriever
 import weaviate
-
+import time
 from build_knowledge_base.populate import create_formula1_collection, import_formula1_data, get_collection_length
 
 app = Flask(__name__)
@@ -25,6 +25,7 @@ def populate():
 
         create_formula1_collection(client) 
         import_formula1_data(client) 
+        time.sleep(5)
         collection_length = get_collection_length(client)
         return jsonify({'message': 'Populated Weaviate!', 'collection_length': collection_length})
     except Exception as e:
@@ -50,6 +51,7 @@ def query():
     print(f"Query: {query}")
     try:
         relevant_docs = retriever.get_relevant_docs(query)
+        print(f"Relevant docs: {relevant_docs}")
         answer  = retriever.generate_answer(query, contexts=relevant_docs)
 
         return jsonify({'relevant_docs': relevant_docs, 'answer': answer})
