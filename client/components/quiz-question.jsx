@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { fabric } from "fabric";
 
 export function QuizQuestion() {
+    const [canvas, setCanvas] = useState(null);
     const canvasRef = useRef(null);
-    let canvas;
 
     useEffect(() => {
-        canvas = new fabric.Canvas(canvasRef.current, {
+        setCanvas(new fabric.Canvas(canvasRef.current, {
             isDrawingMode: true,
             width: 800,
             height: 600,
-        });
+            renderOnAddRemove: true,
+        }));
     }, []);
 
     const handleSubmit = () => {
@@ -44,7 +45,7 @@ export function QuizQuestion() {
                 </div>
                 <Button
                     className="bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors"
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit()}
                 >
                     Submit and Next
                 </Button>
