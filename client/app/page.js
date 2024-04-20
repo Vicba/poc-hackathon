@@ -56,20 +56,28 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
+            {isLoggedIn && (
+                <div className="absolute top-5 right-5">
+                    <div className="flex gap-5 items-center">
+                        <p className="text-slate-300">Connected as {address}</p>
+                        <Button onClick={disconnectWallet}>Logout</Button>
+                    </div>
+                </div>
+            )}
             <div className="mb-14">
                 <h1 className="text-6xl font-bold mb-4">Sportify</h1>
                 <p className="text-xl text-slate-500">Challenge your knowledge</p>
             </div>
-            {!isLoggedIn ? (
+            {!isLoggedIn && (
                 <Button onClick={connectWallet}>Login {address}</Button>
-            ) : (
-                <Button onClick={disconnectWallet}>Logout {address}</Button>
             )}
             {isLoggedIn && (
-                <div className="mt-10">
-                    <Button variant="secondary" onClick={() => startQuiz(1)}>
-                        Start Quiz #1
-                    </Button>
+                <div className="mt-10 flex flex-col gap-2">
+                    {QUIZZES.map((quiz) => (
+                        <Button key={quiz.id} onClick={() => startQuiz(quiz.id)}>
+                            Start Quiz #{quiz.id}
+                        </Button>
+                    ))}
                 </div>
             )}
             <div className="mt-10">
