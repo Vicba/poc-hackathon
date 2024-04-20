@@ -22,6 +22,7 @@ const useStore = create(
       },
       setQuestions: (questions) => set({ questions }),
       setScore: (score) => set({ score }),
+      incrementScore: (score) => set((state) => ({ score: state.score + score})),
       removeQuestions: () => set({ questions: [] }),
       incrementCurrentQuestion: () =>
         set((state) => ({ currentQuestion: state.currentQuestion + 1 })),
@@ -29,16 +30,17 @@ const useStore = create(
       resetScore: () => set({ score: 0 }),
       resetQuizId: () => set({ quizId: null }),
       setQuizId: (id) => set({ quizId: id }),
-      incrementTotalTime: (time) => set({ totalTime: state.totalTime + time }),
+      incrementTotalTime: (time) => set((state) => ({ totalTime: state.totalTime + time })),
       resetTotalTime: () => set({ totalTime: 0 }),
       resetEverything: () => {
         set({ questions: [] });
         set({ currentQuestion: 0 });
+        set({ score: 0 });
         set({ quizId: null });
         set({ totalTime: 0 });
       },
     }),
-    
+
     {
       name: "sportify-store",
       storage: createJSONStorage(() => localStorage),

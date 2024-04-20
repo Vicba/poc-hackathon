@@ -3,11 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Mintnft } from "@/components/mintnft";
 import useStore from "@/hooks/useStore";
+import { QUIZZES } from "@/lib/quizzes";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { set } from "react-hook-form";
 import Web3 from 'web3';
 
 export default function Home() {
-    const { login, logout, isLoggedIn, address } = useStore();
+    const router = useRouter();
+
+    const { login, logout, isLoggedIn, address, resetEverything, setQuestions, setQuizId } = useStore();
 
     const connectWallet = async () => {
         if (typeof window.ethereum !== 'undefined') {
@@ -34,6 +39,21 @@ export default function Home() {
         logout();
     }
 
+    const startQuiz = (quizId) => {
+        try {
+            // Set store values
+            resetEverything();
+            setQuizId(quizId);
+            const quiz = QUIZZES.find((q) => q.id === quizId);
+            setQuestions(quiz.questions);
+
+            // Redirect to quiz page
+            router.push('/quiz');
+        } catch (error) {
+            console.error('Error starting quiz:', error.message)
+        }
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
             {!isLoggedIn ? (
@@ -41,7 +61,13 @@ export default function Home() {
             ) : (
                 <Button onClick={disconnectWallet}>Logout {address}</Button>
             )}
-            {/* <Button onClick={connectWallet}>Login</Button> */}
+            {isLoggedIn && (
+                <div className="mt-10">
+                    <Button variant="secondary" onClick={() => startQuiz(1)}>
+                        Start Quiz #1
+                    </Button>
+                </div>
+            )}
             <div className="mt-10">
                 <Link href="/test-score" className="underline text-gray-400 hover:text-gray-700 underline-offset-4">
                     Test score
