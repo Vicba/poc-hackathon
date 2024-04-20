@@ -21,4 +21,5 @@ __pycache__/
 
 # Environment files
 .env
+.env/*
 .venv/
