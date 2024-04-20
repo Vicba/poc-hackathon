@@ -3,7 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import dah from "../lib/abi.json";
+import { AbiItem } from "web3-utils";
+import Web3 from 'web3';
+import { sendTransaction } from "@/web3/ethereum";
+import useStore from "@/hooks/useStore";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -24,10 +28,21 @@ export function SaveScore() {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm();
+    } = useForm({defaultValues: {lessonId:1, score:80}});
 
-    const onSubmit = ({ score, lessonId }) => {
-        console.log({ score, lessonId });
+    const { address } = useStore();
+    const web3 = new Web3(window.ethereum);
+    const contract = new web3.eth.Contract(
+        dah,
+        "0x8a2270531063d97555047acb2f79b86cc0173824"
+    );
+    const onSubmit = async ({ lessonId, score }) => {
+        console.log({ lessonId, score });
+        const method = contract.methods.uploadScoreOfLesson(lessonId, score);
+        const txHash = await sendTransaction(method, contract, address);
+        const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfLesson(address, lessonId).call();
+        console.log(parseInt(scoreFromBlockchain))
+        // console.log(txHash)
     }
 
     return (
