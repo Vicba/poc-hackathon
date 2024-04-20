@@ -53,6 +53,8 @@ async def predict(request: PredictionRequest) -> dict:
 	return {
 		"prediction": predicted_label_text == request.label,
 		"predicted_label": predicted_label_text,
+		"actual_label": request.label,
+		"prediction_probability": str(round(float(prediction[0][predicted_label_index]), 3))
 	}
 
 def preprocess(image_path: str) -> np.ndarray:
@@ -68,6 +70,10 @@ def preprocess(image_path: str) -> np.ndarray:
 	img = img.resize((100, 100))
 	img_array = np.array(img) / 255.0
 	img_array = np.expand_dims(img_array, axis=0)
+
+	# Save preprocessed image
+	img = Image.fromarray(np.uint8(img_array[0] * 255))
+	img.save("preprocessed_image.png")
 
 	return img_array
 
