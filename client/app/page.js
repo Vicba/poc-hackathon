@@ -56,24 +56,45 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
-            {!isLoggedIn ? (
-                <Button onClick={connectWallet}>Login {address}</Button>
-            ) : (
-                <Button onClick={disconnectWallet}>Logout {address}</Button>
-            )}
             {isLoggedIn && (
-                <div className="mt-10">
-                    <Button variant="secondary" onClick={() => startQuiz(1)}>
-                        Start Quiz #1
-                    </Button>
+                <div className="absolute top-5 w-full px-5">
+                    <div className="flex gap-5 items-center justify-between">
+                        <Button>
+                            <Link href="/chatbot">
+                                Chatbot
+                            </Link>
+                        </Button>
+                        <div className="flex gap-5 items-center">
+                            <p className="text-slate-300">Connected as {address}</p>
+                            <Button variant="secondary" onClick={disconnectWallet}>Logout</Button>
+                        </div>
+                    </div>
                 </div>
             )}
-            <div className="mt-10">
-                <Link href="/test-score" className="underline text-gray-400 hover:text-gray-700 underline-offset-4">
-                    Test score
-                </Link>
+            <div className="mb-14">
+                <h1 className="text-6xl font-bold mb-4">Sportify</h1>
+                <p className="text-xl text-slate-500">Challenge your knowledge</p>
             </div>
-            <Mintnft/>
+            {!isLoggedIn && (
+                <Button onClick={connectWallet}>Login {address}</Button>
+            )}
+            {isLoggedIn && (
+                <>
+                    <div className="mt-10 flex flex-col gap-2">
+                        {QUIZZES.map((quiz) => (
+                            <Button key={quiz.id} onClick={() => startQuiz(quiz.id)}>
+                                Start Quiz #{quiz.id}
+                            </Button>
+                        ))}
+                    </div>
+                    <div className="mt-10">
+                        <Link href="/test-score" className="underline text-gray-400 hover:text-gray-700 underline-offset-4">
+                            Test score
+                        </Link>
+                    </div>
+                    <Mintnft />
+                </>
+            )}
         </main>
     );
 }

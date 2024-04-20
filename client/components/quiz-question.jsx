@@ -28,10 +28,6 @@ export const QuizQuestion = forwardRef(
             editor.canvas.renderAll();
         }, [editor?.canvas]);
 
-        useEffect(() => {
-            // Additional effects if needed based on currentQuestion
-        }, [question]);
-
         const handleSubmit = async () => {
             editor.canvas.isDrawingMode = false;
             editor.canvas.backgroundColor = "#fff";

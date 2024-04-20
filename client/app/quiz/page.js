@@ -37,8 +37,8 @@ export default function Quiz() {
 
     const handleNext = async () => {
         if (quizQuestionRef.current) {
-            await quizQuestionRef.current.handleCheck();
             incrementTotalTime(45 - seconds);
+            await quizQuestionRef.current.handleCheck();
 
             if (currentQuestion === questions.length - 1) {
                 router.push("/quiz/result");

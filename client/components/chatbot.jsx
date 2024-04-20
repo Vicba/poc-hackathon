@@ -21,6 +21,7 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react"; // Import useState hook
+import Link from "next/link";
 
 export function Chatbot() {
     const [inputValue, setInputValue] = useState(""); // State to manage input value
@@ -62,7 +63,9 @@ export function Chatbot() {
             <header className="bg-gray-900 text-white py-4 px-6 flex items-center justify-between">
                 <div className="flex items-center">
                     <button className="p-2 bg-slate-600 rounded mr-4">
-                        Go Back
+                        <Link href="/">
+                            Go Back
+                        </Link>
                     </button>
                     <h1 className="text-lg font-medium">SportIQ Chat</h1>
                 </div>
