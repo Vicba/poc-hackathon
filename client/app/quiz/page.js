@@ -23,11 +23,12 @@ export default function Quiz() {
             incrementTotalTime(45);
             quizQuestionRef.current.handleCheck();
 
-            if (currentQuestion === questions.length - 1) {
+            if (currentQuestion == questions.length - 1) {
                 router.push("/quiz/result");
                 resetCurrentQuestion();
                 return;
             }
+            console.log("incrementing")
             incrementCurrentQuestion();
             restart(new Date().getTime() + 1000 * 45);
         } else {
@@ -42,11 +43,12 @@ export default function Quiz() {
 
             console.log("currentQuestion", currentQuestion, questions.length - 1)
 
-            if (currentQuestion === questions.length - 1) {
+            if (currentQuestion == questions.length - 1) {
                 router.push("/quiz/result");
                 resetCurrentQuestion();
                 return;
             }
+            console.log("incrementing")
             incrementCurrentQuestion();
             restart(new Date().getTime() + 1000 * 45);
         } else {

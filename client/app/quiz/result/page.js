@@ -14,7 +14,7 @@ export default function Result() {
     const web3 = new Web3(window.ethereum);
     const contract = new web3.eth.Contract(
         dah,
-        "0x8a2270531063d97555047acb2f79b86cc0173824"
+        "0xe8e9e68a61570ff81296543509722e2c5514025c"
     );
 
     if (!isLoggedIn) {
@@ -23,6 +23,7 @@ export default function Result() {
 
     const handleSave = async () => {
         try {
+            console.log(score, quizId, address)
             const method = contract.methods.uploadScoreOfQuiz(quizId, score);
             const txHash = await sendTransaction(method, contract, address);
             const scoreFromBlockchain = await contract.methods.getAverageScoreOfAddressOfQuiz(address, quizId).call();
