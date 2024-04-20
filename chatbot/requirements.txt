@@ -5,4 +5,4 @@ tqdm
 python-dotenv
 flask-cors
 transformers
-torch
+openai
