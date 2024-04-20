@@ -56,6 +56,10 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
+            <div className="mb-14">
+                <h1 className="text-6xl font-bold mb-4">Sportify</h1>
+                <p className="text-xl text-slate-500">Challenge your knowledge</p>
+            </div>
             {!isLoggedIn ? (
                 <Button onClick={connectWallet}>Login {address}</Button>
             ) : (
@@ -73,7 +77,7 @@ export default function Home() {
                     Test score
                 </Link>
             </div>
-            <Mintnft/>
+            <Mintnft />
         </main>
     );
 }
