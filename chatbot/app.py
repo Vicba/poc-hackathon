@@ -42,12 +42,10 @@ def check_db() -> str:
         return jsonify({'error': str(e)}), 500
     
 
-@app.route('/query')
+@app.route('/query', methods=['POST'])
 def query():
     data = request.get_json()
-    if 'query' in data:
-        query = data['query']
-
+    query = data.get('query')
     print(f"Query: {query}")
     try:
         relevant_docs = retriever.get_relevant_docs(query)
