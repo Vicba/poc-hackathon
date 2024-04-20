@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import useStore from "@/hooks/useStore";
 import Link from "next/link";
 import { set } from "react-hook-form";
+import Web3 from 'web3';
 
 export default function Home() {
-    const { isLoggedIn, setIsLoggedIn } = useStore();
+    const { login, logout, isLoggedIn, address } = useStore();
 
     const connectWallet = async () => {
         if (typeof window.ethereum !== 'undefined') {
@@ -18,8 +19,8 @@ export default function Home() {
                 if (accounts.length === 0) {
                     console.log('No account connected')
                 } else {
-                    const web3 = new Web3(window.ethereum)
-                    await setIsLoggedIn(true)
+                    const web3 = new Web3(window.ethereum);
+                    await login(accounts[0]);
                 }
             } catch (error) {
                 console.error('Error connecting wallet:', error.message)
@@ -30,16 +31,15 @@ export default function Home() {
     }
 
     const disconnectWallet = () => {
-        setIsLoggedIn(false);
-        store.commit("logout");
+        logout();
     }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
             {!isLoggedIn ? (
-                <Button onClick={connectWallet}>Login</Button>
+                <Button onClick={connectWallet}>Login {address}</Button>
             ) : (
-                <Button onClick={disconnectWallet}>Logout</Button>
+                <Button onClick={disconnectWallet}>Logout {address}</Button>
             )}
             {/* <Button onClick={connectWallet}>Login</Button> */}
             <div className="mt-10">

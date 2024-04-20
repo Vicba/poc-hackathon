@@ -3,7 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import dah from "../lib/abi.json";
+import { AbiItem } from "web3-utils";
+import Web3 from 'web3';
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -25,9 +27,15 @@ export function SaveScore() {
         watch,
         formState: { errors },
     } = useForm();
-
-    const onSubmit = ({ score, lessonId }) => {
+    const web3 = new Web3(Web3.givenProvider);
+    const contract = new web3.eth.Contract(
+        dah,
+        "0xDA07165D4f7c84EEEfa7a4Ff439e039B7925d3dF"
+    );
+    console.log("yeees")
+    const onSubmit = async ({ score, lessonId }) => {
         console.log({ score, lessonId });
+        await contract.methods.uploadScoreOfLesson(lessonId, score).call();
     }
 
     return (

@@ -5,12 +5,21 @@ const useStore = create(
   persist(
     (set) => ({
       isLoggedIn: false,
+      address: "",
       questions: [],
       currentQuestion: 0,
       score: 0,
       quizId: null,
       totalTime: 0,
       setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
+      login: (address) => {
+        set ({ address })
+        set ({ isLoggedIn: true })
+      },
+      logout: () => {
+        set ({ address: "" })
+        set ({ isLoggedIn: false })
+      },
       setQuestions: (questions) => set({ questions }),
       setScore: (score) => set({ score }),
       removeQuestions: () => set({ questions: [] }),
@@ -29,6 +38,7 @@ const useStore = create(
         set({ totalTime: 0 });
       },
     }),
+    
     {
       name: "sportify-store",
       storage: createJSONStorage(() => localStorage),
