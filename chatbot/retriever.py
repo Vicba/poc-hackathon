@@ -49,6 +49,8 @@ class Retriever():
             headers=headers,
             json={"inputs": text, "options": {"wait_for_model": True}},
         )
+
+        print("response: ", response.json())
         return response.json()
     
 
@@ -151,6 +153,7 @@ class Retriever():
 
         try:
             query_vector = self.query_text(query)
+            print(f"Query vector: {query_vector}")
 
             print(f"Query vector: {query_vector}")
 

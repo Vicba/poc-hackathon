@@ -42,7 +42,7 @@ def check_db() -> str:
         return jsonify({'error': str(e)}), 500
     
 
-@app.route('/query', methods=['POST'])
+@app.route('/query')
 def query():
     data = request.get_json()
     query = data.get('query')
