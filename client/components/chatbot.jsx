@@ -33,18 +33,18 @@ export function Chatbot() {
     console.log(inputValue)
     setMessages(prevMessages => [...prevMessages, inputValue])
     try {
-      const response = await fetch('https://your-api-endpoint.com/messages', {
+      const response = await fetch('http://127.0.0.1:5000/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: inputValue }),
+        body: JSON.stringify({ "query": inputValue }),
       });
-
+      
       if (response.ok) {
         console.log('Message sent successfully');
         json = await response.json();
-        setMessages(prevMessages => [...prevMessages, json.message])
+        setMessages(prevMessages => [...prevMessages, json.answer])
       } else {
         console.error('Failed to send message');
         setMessages(prevMessages => [...prevMessages, "error"])
@@ -61,23 +61,30 @@ export function Chatbot() {
       <header
         className="bg-gray-900 text-white py-4 px-6 flex items-center justify-between">
         <div className="flex items-center">
-          <TextIcon className="h-6 w-6 mr-2" />
-          <h1 className="text-lg font-medium">ChatGPT</h1>
+          <button className="p-2 bg-slate-600 rounded mr-4">Go Back</button>
+          <h1 className="text-lg font-medium">SportIQ Chat</h1>
         </div>
         <div className="flex items-center">
           <Avatar className="h-8 w-8 mr-2">
             <AvatarImage alt="User Avatar" src="/placeholder-avatar.jpg" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
-          <span className="text-sm">John Doe</span>
         </div>
       </header>
       <main className="flex-1 bg-gray-100 dark:bg-gray-800 p-6 overflow-y-auto">
         <div className="space-y-4">
           <div className="messages">
-          <ul>
+          <ul className="flex flex-col">
             {messages.map((message, index) => (
-              <li key={index}>{message}</li>
+              <li
+                className={`inline-block ${index % 2 === 0 ? "self-end" : "self-start"}`}
+                key={index}
+              >
+                <p className={`p-2 ${index % 2 === 0 ? " rounded bg-blue-500 text-right mb-4" : "rounded bg-green-500 text-left mb-4"}`}>
+
+                {message}
+                </p>
+              </li>
             ))}
           </ul>
           </div>
