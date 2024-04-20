@@ -45,7 +45,6 @@ export default function Quiz() {
 
             if (currentQuestion == questions.length - 1) {
                 router.push("/quiz/result");
-                resetCurrentQuestion();
                 return;
             }
             console.log("incrementing")
