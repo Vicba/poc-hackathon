@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Mintnft } from "@/components/mintnft";
+import { Overview } from "@/components/overview";
 import useStore from "@/hooks/useStore";
 import { QUIZZES } from "@/lib/quizzes";
 import Link from "next/link";
@@ -74,6 +75,7 @@ export default function Home() {
                 </Link>
             </div>
             <Mintnft/>
+            <Overview/>
         </main>
     );
 }
