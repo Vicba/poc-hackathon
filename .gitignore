@@ -15,6 +15,8 @@ build/
 .vscode/
 .idea/
 __pycache__/
+__pycache__/*
+
 
 # Files
 .DS_Store
@@ -23,4 +25,5 @@ __pycache__/
 # Environment files
 .env
 .env/*
-.venv/
+venv/
+venv/*
