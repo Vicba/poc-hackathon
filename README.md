@@ -6,13 +6,9 @@
   <br/>
 </p>
 
-## Introduction
+## Sportify
 
-This is a proof of concept for the Sportify hackathon. Sportify is a platform that allows users to create and participate in quizzes and challenges. Finishing all the quizzes and challenges will earn the user an NFT. The NFT can be used to redeem rewards.
-
-## Why Sportify?
-
-Sportify is a fun and interactive way to learn about sports. It is a platform that allows users to learn about sports and earn rewards. The quizzes and challenges are designed to be fun and engaging. The chatbot will ask questions to improve the user's knowledge. The user can earn NFTs by completing quizzes and challenges. The NFT can be used to redeem rewards.
+Sportify is a fun and interactive proof of concept to learn more about sports. It is is a platform that allows sport enthusiasts learn more about their favorite sports and earn rewards. The quizzes and challenges are designed to be fun and engaging (for example drawing a formula1 circuit). Every submission gets stored on the blockchain to ensure transparency and immutability, providing users with a secure and verifiable record of their achievements. It also uses a chatbot that will answer all your specific questions to improve the user's knowledge. The user can earn NFTs by completing all quizzes and challenges of a specific sport. As it could be used to win discounts or tickets for real life sports events.
 
 ## Features
 
